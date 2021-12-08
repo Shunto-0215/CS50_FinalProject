@@ -7,7 +7,5 @@ Yey
 aaaa
 bbb
 ccc
-dddaaaa
-bbbbb
-ccc
+ddd
 dwarf
