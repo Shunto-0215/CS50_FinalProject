@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+{{ message }}
+<table class="table tablestriped">
+    <thead>
+        <tr>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+            {% for owned_stock in range(length) %}
+            <tr>
+                
+                <td>{{ owned_stocks[owned_stock]["symbol"] }}</td>
+                <td>{{ owned_stocks[owned_stock]["company_name"] }}</td>
+                <td>{{ owned_stocks[owned_stock]["shares"] }}</td>
+                <td>{{ owned_stocks[owned_stock]["price"] | usd }}</td>
+                <td>{{ (owned_stocks[owned_stock]["price"] * owned_stocks[owned_stock]["shares"]) | usd }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Cash</td>
+                <td>{{ cash | usd }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total</td>
+                <td>{{ total_asset | usd }}</td>
+            </tr>
+        </tr>
+    </thead>
+</table>
+{% endblock %}
