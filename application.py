@@ -9,7 +9,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from sqlalchemy.orm import sessionmaker
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required, lookup
 from modules import Base, History, Owned_stock, Users, engine
 
 #admin users name
@@ -46,11 +46,11 @@ if not os.environ.get("API_KEY"):
 
 # 
 @app.route("/")
-if session["name"]:
-    redirect("index")
-else:
-    render_template("topmessage.html")
-def index():
+def top():
+    if session["name"]:
+        return redirect("index")
+    else:
+        return render_template("topmessage.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -74,7 +74,6 @@ def login():
         # Query database for username
         with orm_session as ss:
             rows = ss.query(Users).filter(Users.username == request.form.get("username")).all()
-            print(f"attention!{rows[0].username}")
             ss.close()
 
         # Ensure username exists and password is correct
@@ -92,6 +91,9 @@ def login():
         return render_template("login.html")
 
 @app.route("/index")
+@login_required
+def index():
+
 @app.route("/logout")
 def logout():
     """Log user out"""
@@ -119,7 +121,8 @@ def register():
         if not username:
             return apology("Fill username")
         # If username is not unique render to apology"""
-        rows = db.execute("SELECT * from users WHERE username = ?", request.form.get("username"))
+        with orm_session as ss:
+            rows = ss.query(Users).filter(Users.username == username).all()
         if len(rows) != 0:
             return apology("The username already exists")
         
@@ -133,11 +136,16 @@ def register():
         # hash the password"""
         hashed_pw = generate_password_hash(password)
         # store date from form to db"""
-        db.execute("INSERT INTO users (username, hash) VALUES(?, ?)", username, hashed_pw)
-
+        with orm_session as ss:
+            if not username in admin
+                new_user = Users(Users.username == username, Users.hash == hashed_pw)
+            else:
+                new_user = Users(Users.username == username, Users.hash == hashed_pw, Users.image_search == 1000)
+            ss.add(new_user)
+            ss.commint()
         # render to login?"""
         message = "You are registered! You can login now."
-        return render_template("login.html", message=message)
+        return render_template("index.html", message=message)
 
 @app.route("add", methods = ["POST", "GET"])
 def add():
