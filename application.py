@@ -177,7 +177,7 @@ def register():
             ss.commit()
         # render to login?"""
         message = "You are registered! You can login now."
-        return render_template("index.html", message=message)
+        return render_template("vanilla_index.html", message=message)
 
 @app.route("/add", methods = ["POST", "GET"])
 @login_required
