@@ -9,8 +9,8 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from sqlalchemy.orm import sessionmaker
-from helpers import apology, login_required, lookup
-from modules import Base, History, Owned_stock, Users, engine
+from helpers import apology, login_required
+from modules import Base, Users, Vbook, engine
 
 #admin users name
 admin = ["Shunto", "Shunto50", "Test_Shunto"]
@@ -33,9 +33,6 @@ def after_request(response):
     return response
 
 
-# Custom filter
-app.jinja_env.filters["usd"] = usd
-
 #Secret key
 secret = secrets.token_urlsafe(32)
 app.secret_key = secret
@@ -47,8 +44,8 @@ if not os.environ.get("API_KEY"):
 # 
 @app.route("/")
 def top():
-    if session["name"]:
-        return redirect("index")
+    if session:
+        return redirect("/index")
     else:
         return render_template("topmessage.html")
 
@@ -93,6 +90,13 @@ def login():
 @app.route("/index")
 @login_required
 def index():
+    with orm_session as ss:
+        vlist = ss.query(Vbook).filter(Vbook.userid == session["user_id"]).all()
+        length = len(vlist)
+        ss.close()
+    print(f"Registered word!! {vlist[0].word}")
+
+    return render_template("index.html", vlist = vlist, length = length)
 
 @app.route("/logout")
 def logout():
@@ -123,6 +127,7 @@ def register():
         # If username is not unique render to apology"""
         with orm_session as ss:
             rows = ss.query(Users).filter(Users.username == username).all()
+            ss.close()
         if len(rows) != 0:
             return apology("The username already exists")
         
@@ -137,23 +142,42 @@ def register():
         hashed_pw = generate_password_hash(password)
         # store date from form to db"""
         with orm_session as ss:
-            if not username in admin
-                new_user = Users(Users.username == username, Users.hash == hashed_pw)
+            if not username in admin:
+                new_user = Users(username = username, hash = hashed_pw)
             else:
-                new_user = Users(Users.username == username, Users.hash == hashed_pw, Users.image_search == 1000)
+                new_user = Users(username = username, hash = hashed_pw, image_search = 1000)
             ss.add(new_user)
-            ss.commint()
+            ss.commit()
         # render to login?"""
         message = "You are registered! You can login now."
         return render_template("index.html", message=message)
 
-@app.route("add", methods = ["POST", "GET"])
+@app.route("/add", methods = ["POST", "GET"])
+@login_required
 def add():
+    if request.method == "GET":
+        return render_template("add.html")
 
+    else:
+        word = request.form.get("word")
+        meaning = request.form.get("meaning")
+        img_url = request.form.get("img_url")
 
-@app.route("")
-
-
+        if not word:
+            return apology("Word must not be an empty")
+        if not meaning:
+            return apology("Meaning must be filled")
+        if len(word) > 255:
+            return apology("letter count in [word]should be within 255")
+        if len(meaning) > 1023:
+            return apology("letter count in [meaning] should be within 1023")
+        else:
+            new_word = Vbook(word = word, meaning = meaning, img_url = img_url, userid = session["user_id"])
+            with orm_session as ss:
+                ss.add(new_word)
+                ss.commit()
+            message = "Registered Successfully!"
+            return render_template("add.html", message = message)
 
 def errorhandler(e):
     """Handle error"""

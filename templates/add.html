@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+{{ message }}
+<form action="add" method="post"> 
+    <input type="text" autocomplete="off" name="word" placeholder="word">
+    <input type="text" autocomplete="off" name="meaning" placeholder="meaning">
+    <button type="submit">Register</button>
+</form>
+{% endblock %}

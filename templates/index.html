@@ -10,36 +10,23 @@
     <thead>
         <tr>
             <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Shares</th>
-                <th>Price</th>
-                <th>Total</th>
+                <th>Word</th>
+                <th>Meaning</th>
+                <th>Image</th>
             </tr>
-            {% for owned_stock in range(length) %}
+            {% for v in range(length) %}
             <tr>
                 
-                <td>{{ owned_stocks[owned_stock]["symbol"] }}</td>
-                <td>{{ owned_stocks[owned_stock]["company_name"] }}</td>
-                <td>{{ owned_stocks[owned_stock]["shares"] }}</td>
-                <td>{{ owned_stocks[owned_stock]["price"] | usd }}</td>
-                <td>{{ (owned_stocks[owned_stock]["price"] * owned_stocks[owned_stock]["shares"]) | usd }}</td>
+                <td>{{ vlist[v].word }}</td>
+                <td>{{ vlist[v].meaning }}</td>
+                {% if vlist[v].img_url %}
+                <td><img src ="{{ vlist[v].img_url }}"></td>
+                {% else %}
+                <td>None</td>
+                {% endif %}
+
             </tr>
             {% endfor %}
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>Cash</td>
-                <td>{{ cash | usd }}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>Total</td>
-                <td>{{ total_asset | usd }}</td>
-            </tr>
         </tr>
     </thead>
 </table>

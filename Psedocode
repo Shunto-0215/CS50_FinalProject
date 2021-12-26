@@ -56,6 +56,7 @@ For example, The number of images you can search is limited.
 word, meaning, image
 [table row] x 20
  # showing registered vocabluary as text. Image will be shown by direct link
+ # TODO
 if the user registers more than 20 vocabluarys:
     if user already see page two:
         previous page button
