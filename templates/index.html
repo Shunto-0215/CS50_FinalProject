@@ -13,6 +13,7 @@
                 <th>Word</th>
                 <th>Meaning</th>
                 <th>Image</th>
+                <th>Delete Button</th>
             </tr>
             {% for v in range(length) %}
             <tr>
@@ -24,7 +25,12 @@
                 {% else %}
                 <td>None</td>
                 {% endif %}
-
+                <td> 
+                <form action="/delete" method="post" name="{{vlist[v].id}}">
+                    <input type ="hidden" name="id" value="{{vlist[v].id}}">
+                    <input value="Delete" type="submit">
+                </form>
+                </td>
             </tr>
             {% endfor %}
         </tr>

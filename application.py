@@ -11,6 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.orm import sessionmaker
 from helpers import apology, login_required
 from modules import Base, Users, Vbook, engine
+from sqlalchemy import and_
 
 #admin users name
 admin = ["Shunto", "Shunto50", "Test_Shunto"]
@@ -34,8 +35,9 @@ def after_request(response):
 
 
 #Secret key
-secret = secrets.token_urlsafe(32)
-app.secret_key = secret
+if not os.environ.get("SECRET_KEY"):
+    raise RuntimeError("SECRET_KEY not set")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 # Make sure Microsoft BingAPI key is set
 if not os.environ.get("API_KEY"):
@@ -47,6 +49,7 @@ def top():
     if session:
         return redirect("/index")
     else:
+        # When user is not logged in yet
         return render_template("topmessage.html")
 
 
@@ -87,17 +90,41 @@ def login():
     else:
         return render_template("login.html")
 
-@app.route("/index")
+@app.route("/index", methods = ["GET"])
 @login_required
 def index():
+    # When user visited top page of the app,
     with orm_session as ss:
         vlist = ss.query(Vbook).filter(Vbook.userid == session["user_id"]).all()
         length = len(vlist)
         ss.close()
-    print(f"Registered word!! {vlist[0].word}")
+    # show registered words if there is
+    if vlist:
+        return render_template("index.html", vlist = vlist, length = length)
+    else:
+    # render to page to show a message prompts users to add any words
+        message = "No words registered yet! Try add something!"
+        return render_template("vanilla_index.html", message = message)
 
-    return render_template("index.html", vlist = vlist, length = length)
+@app.route("/delete", methods = ["POST"])
+@login_required
+def delete():
+    # users want to delete something.
+    with orm_session as ss:
+        delete = ss.query(Vbook).filter((and_(Vbook.id == request.form.get("id"), Vbook.userid == session["user_id"]))).one()
+    if delete:
+        ss.delete(delete)
+        ss.commit()
+        return redirect("/index")
+    else:
+        message = "Unknown Error, Delete failed"
+        return render_template("vanilla_index.html", message = message)
 
+
+
+
+
+    
 @app.route("/logout")
 def logout():
     """Log user out"""
@@ -145,7 +172,7 @@ def register():
             if not username in admin:
                 new_user = Users(username = username, hash = hashed_pw)
             else:
-                new_user = Users(username = username, hash = hashed_pw, image_search = 1000)
+                new_user = Users(username = username, hash = hashed_pw, image_search = 1000, usertype = admin)
             ss.add(new_user)
             ss.commit()
         # render to login?"""
@@ -176,7 +203,7 @@ def add():
             with orm_session as ss:
                 ss.add(new_word)
                 ss.commit()
-            message = "Registered Successfully!"
+            message = "The word is registered Successfully!"
             return render_template("add.html", message = message)
 
 def errorhandler(e):
