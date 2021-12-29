@@ -1,11 +1,14 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Portfolio
+    Vocabluary list
 {% endblock %}
 
 {% block main %}
+<
 {{ message }}
+{{ pagenation.info }}
+{{ pagenation.links }}
 <table class="table tablestriped">
     <thead>
         <tr>
@@ -28,7 +31,7 @@
                 <td> 
                 <form action="/delete" method="post" name="{{vlist[v].id}}">
                     <input type ="hidden" name="id" value="{{vlist[v].id}}">
-                    <input value="Delete" type="submit">
+                    <input value="Remembered!" type="submit">
                 </form>
                 </td>
             </tr>
@@ -36,4 +39,5 @@
         </tr>
     </thead>
 </table>
+{{ pagenation.links}}
 {% endblock %}

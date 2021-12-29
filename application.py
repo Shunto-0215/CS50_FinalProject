@@ -6,6 +6,7 @@ import requests
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
+from flask_paginate import Pagination, get_page_parameter
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -102,7 +103,10 @@ def index():
         ss.close()
     # show registered words if there is
     if vlist:
-        return render_template("index.html", vlist = vlist, length = length)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        res = vlist[(page - 1)*10: page*10]
+        pagenation = Pagination(page=page, total=length, per_page=10, css_framework="bootstrap4")
+        return render_template("index.html", vlist = res, pagenation=pagenation, length = len(res))
     else:
     # render to page to show a message prompts users to add any words
         message = "No words registered yet! Try add something!"
