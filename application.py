@@ -189,7 +189,7 @@ def add():
         word = request.form.get("word")
         meaning = request.form.get("meaning")
         img_url = request.form.get("img_url")
-
+        Image_Search = request.form.get("Image_Search")
         if not word:
             return apology("Word must not be an empty")
         if not meaning:
@@ -198,7 +198,10 @@ def add():
             return apology("letter count in [word]should be within 255")
         if len(meaning) > 1023:
             return apology("letter count in [meaning] should be within 1023")
-        else:
+        if Image_Search == "True":
+            # Image Search
+            
+        else:        
             new_word = Vbook(word = word, meaning = meaning, img_url = img_url, userid = session["user_id"])
             with orm_session as ss:
                 ss.add(new_word)
