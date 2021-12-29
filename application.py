@@ -1,5 +1,6 @@
 import os
 import secrets
+import requests
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
@@ -199,8 +200,33 @@ def add():
         if len(meaning) > 1023:
             return apology("letter count in [meaning] should be within 1023")
         if Image_Search == "True":
+
             # Image Search
-            
+            # Basic setting
+
+            subscription_key = os.environ.get("API_KEY")
+            search_url = "https://api.bing.microsoft.com/v7.0/images/search"
+
+            # Headers
+            headers = {"Ocp-Apim-Subscription-Key" : subscription_key}
+
+            # parameters
+            params = {"q": word, "license": "public"}
+            response = requests.get(search_url, headers = headers, params = params)
+            response.raise_for_status()
+            search_results = response.json()
+            # add image urls to the list
+            if search_results:
+                img_urls = []
+                for r in search_results["value"][:16]:
+                    img_urls.append(r["contentUrl"])
+                    # render the page with image results
+                length = len(img_urls)
+                return render_template("add_image.html", img_urls = img_urls, length = length, word = word, meaning = meaning)
+            else:
+                return apology("Image not found")
+
+
         else:        
             new_word = Vbook(word = word, meaning = meaning, img_url = img_url, userid = session["user_id"])
             with orm_session as ss:
