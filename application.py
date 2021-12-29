@@ -203,6 +203,26 @@ def add():
         if Image_Search == "True":
 
             # Image Search
+            # Check if the user still can search an image
+            # pull image_search
+            with orm_session as ss:
+                user = ss.query(Users).filter(Users.id == session["user_id"]).first()
+                ss.close()
+            # Check if it's still remain
+            remain = user.image_search
+            if remain < 1:
+                return apology("You cannot search images anymore")
+            # If not admin, minus remain one
+            with orm_session as ss:
+                user = ss.query(Users).filter(Users.id == session["user_id"]).first()
+                user_name = user.username
+                if user_name not in admin:
+                    # minus one from remain
+                    user.image_search = user.image_search - 1
+                    remain = user.image_search
+                    ss.commit()
+                else:
+                    ss.close()
             # Basic setting
 
             subscription_key = os.environ.get("API_KEY")
@@ -219,11 +239,11 @@ def add():
             # add image urls to the list
             if search_results:
                 img_urls = []
-                for r in search_results["value"][:16]:
+                for r in search_results["value"][:15]:
                     img_urls.append(r["contentUrl"])
                     # render the page with image results
                 length = len(img_urls)
-                return render_template("add_image.html", img_urls = img_urls, length = length, word = word, meaning = meaning)
+                return render_template("add_image.html", img_urls = img_urls, length = length, word = word, meaning = meaning, remain = remain)
             else:
                 return apology("Image not found")
 

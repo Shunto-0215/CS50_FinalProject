@@ -13,6 +13,7 @@
     <button type="submit" value="test">Register</button>
     <div id ="img_list">
         <h2>Choose an image associated with the word</h2>
+        <h3>You can search images {{ remain }} more times</h3>
         {% for i in range(length) %}
             <input type ="radio" name="img_url" id = "{{ i }}" value="{{ img_urls[i] }}">
                 <label for ="{{ i }}"><img src="{{ img_urls[i] }}" width = "300" height = "250"></label>
