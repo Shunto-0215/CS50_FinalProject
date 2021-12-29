@@ -17,7 +17,7 @@ from modules import Base, Users, Vbook, engine
 from sqlalchemy import and_
 
 #admin users name
-admin = ["Shunto", "Shunto50", "Test_Shunto"]
+admin = ["Shunto"]
 
 # Configure application
 app = Flask(__name__)
