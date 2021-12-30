@@ -16,12 +16,12 @@ The features of this app are as follows:
 - Delete registered vocabulary
 
 #### Configuration of this app are as follows
-Frontend: Bootstrap, HTML
-Backend: Flask
-ORM: SQLAlchemy
-DB: PostgreSQL
-infrastructure: Heroku
-API: Bing Image Search API (Free Subscription Plan)
+- Frontend: Bootstrap, HTML
+- Backend: Flask
+- ORM: SQLAlchemy
+- DB: PostgreSQL
+- infrastructure: Heroku
+- API: Bing Image Search API (Free Subscription Plan)
 
 ##### Background of design choices
 For this project, I set it as technical challenge to deploy a web application to the infrastructure other than CS50 IDE.
