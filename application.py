@@ -55,7 +55,7 @@ def top():
         # When user is not logged in yet
         return render_template("topmessage.html")
 
-
+# Cited from CS50's 2021 Problem set 9, a bit adjusted
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -130,7 +130,7 @@ def delete():
 
 
 
-    
+# Cited from CS50's 2021 Problem set 9    
 @app.route("/logout")
 def logout():
     """Log user out"""
@@ -142,6 +142,7 @@ def logout():
     return redirect("/")
 
 
+# Cited from CS50's 2021 Problem set 9, modified a little bit.
 @app.route("/register", methods=["GET", "POST"])
 def register():
     # If the request method is GET render to register.html"""
@@ -260,6 +261,7 @@ def add():
             message = "The word is registered Successfully!"
             return render_template("add.html", message = message)
 
+# Cited from CS50's 2021 Problem set 9
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
