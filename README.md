@@ -52,4 +52,4 @@ Also, for this application, user should be able to access images linked with voc
 
 #### When Launching this application
 
-Need to set SECRET KEY and Bing Search API KEY.
+Need to set SECRET KEY and Bing Search API KEY. You also require to initialize the database by using "init_db()" function in application.py
