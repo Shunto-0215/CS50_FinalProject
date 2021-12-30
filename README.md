@@ -32,7 +32,7 @@ CS50 IDE did everything for me but deploying a web app on Heroku takes many effo
 - Use Database language other than SQLite which I am familiar with thanks to CS50 courses.
 Heroku does not support SQLite. When I had to use another SQL language, ORM(SQLAlchemy) became the 1st choice for me. Since I want to continue coding even after finishing this course, I want to choose something universal. ORM allows us to write same code regardless any SQL direct so this is the reason why I chose to learn ORM.
 - Heroku do not support uploading any images on the app
-When I decided the design of final project which needs the first thing came to my mind is uploading images searched for on the app server. However, Heroku does not support uploading any files. Due to this restriction, I decided to link images directly even though I know it might not be recommended. Due to this reason I made this application for mainly my personal use. So that, users can search for images only 10 times.
+When I decided the design of final project which needs the first thing came to my mind is uploading images searched for on the app server. However, Heroku does not support uploading any files. Due to this restriction, I decided to link images directly even though I know it might not be recommended. Due to this reason I made this application for mainly my personal use. So that, users can search for images only 10 times. This is one of the reasons I added pagination function, which reduces unnecessarily access to the images.
 
 
 Also, for this application, user should be able to access images linked with vocabulary with ease. So that I decided to use API provided by Search engine. I chose API provided by Bing because it provides me with best for free subscription plan.
@@ -46,9 +46,10 @@ Also, for this application, user should be able to access images linked with voc
 - Procfile -- Heroku needs this
 - requirements.txt -- lists things to run on another environment rather than my local one.
 - README.md -- this file
-- static 
+- static folder -- states style
+- templates folder -- HTML files, frontend
 
 
-#### When Launching application
+#### When Launching this application
 
-If you deploy
+Need to set SECRET KEY and Bing Search API KEY.
